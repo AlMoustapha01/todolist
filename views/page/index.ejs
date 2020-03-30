@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+ <html lang="fr">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+     <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="style.css">
+     <title>Page d'accueil</title>
+ </head>
+ <body>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Fixed top</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Features</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Pricing</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Dropdown link
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+      </nav>
+      <br><br><br>
+
+<div class="container">
+    <% if (locals.flash && locals.flash.error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa fa-times-circle"></i> <%= flash.error %> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    <% } %>
+    <% if (locals.flash && locals.flash.success) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa fa-check-circle"></i> <%= flash.success %> 
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    <% } %>
+   <form action="/" method="POST">
+
+       <div class="row">
+           <div class="col-9"> <input class="form-control" id="input" name="todo" type="text" placeholder="Entrer votre tache "></div>
+           <div class="col-3"><button class="btn btn-outline-success" type="submit">Nouvelle tache</button></div>
+       </div>
+      
+   </form>
+   <br><br>
+   <div class="row">
+        <div class="col-9">
+            <div class="border border-info shadow-lg p-3 mb-5 bg-white rounded ">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        
+                        <th scope="col">Id </th>
+                        <th scope="col">Tache</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Achevé</th>
+                        <th scope="col">Supprimer</th>
+                        <th scope="col">Editer</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <% for(elt of mes){ %>
+                      <tr>
+                       
+                        <th style="color: rgb(15, 102, 202);" scope="row" id="elt1"><%= elt.id_todo %> </th>
+                        <td style="color: rgb(15, 102, 202);" id="elt2"><%= elt.contenu %></td>
+                        <td style="color: rgb(15, 102, 202);" id="elt3" ><%= elt.datecreation.fromNow() %></td>
+                        <td>
+                          <h3 style="color: rgb(15, 102, 202);"><a id="validate" href="#"><i class="fa fa-check-circle-o"></i></a></h3>
+                        </td>
+                        <td>
+                          <form action="/delete" method="post">
+                            <input type="text" value="<%= elt.id_todo %>" name="del" style="display: none;">
+                            <button class="btn btn-light" type="submit"><h3 style="color: rgb(12, 83, 54);"><a id="delete" href="#"><i class="fa fa-trash-o"></i></a></h3></button>
+                          </form>
+                          </td>
+                        <td><h3 style="color: rgb(12, 83, 54);"><a id="edit" href="#"><i class="fa fa-pencil-square-o"></i></a></h3></td>
+                      </tr>
+                      <% } %> 
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+   </div>
+  
+</div> 
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script>
+    var check = document.querySelectorAll('#validate');
+    var edit = document.querySelectorAll('#edit');
+    var elt1 = document.querySelectorAll('#elt1');
+    var elt2 = document.querySelectorAll('#elt2');
+    var elt3 = document.querySelectorAll('#elt3');
+    var input= document.querySelector("#input")
+    var tr = document.querySelectorAll('tbody tr');
+    var tbody = document.querySelector('tbody');
+    
+    for (var k=0;k<tr.length;k++){
+      (function(){
+        var ch= tr[k].querySelector('#validate');
+        var ed =tr[k].querySelector('#edit');
+        var sup = tr[k].querySelector('#delete')
+        var e1= tr[k].querySelector('#elt1')
+        var e2= tr[k].querySelector('#elt2')
+        var e3= tr[k].querySelector('#elt3')
+        var form= document.querySelector('form .row .col-9');
+
+        ed.addEventListener('click',function(e){
+          input.value= e2.innerHTML;
+          tbody.removeChild(ed.parentNode.parentNode.parentNode);
+          var inp= document.createElement("input");
+          inp.name="id";
+          inp.style.display="none";
+          inp.value= e1.innerHTML;
+          form.append(inp);
+
+        })
+
+        sup.parentNode.parentNode.addEventListener('click',function(e){
+          alert('Voulez vous vraiment supprimer cette tache?')
+        })
+        ch.addEventListener('click',function(e) {
+       
+          e1.classList.toggle('barre');
+          e2.classList.toggle('barre');
+          e3.classList.toggle('barre')
+        
+      })
+      })()
+      
+    }
+    
+   
+
+</script>
+</body>
+</html>

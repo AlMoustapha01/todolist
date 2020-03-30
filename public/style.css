@@ -1,0 +1,14 @@
+.contenu{
+    border-style: ridge;
+    border-width: 5px;
+    border-color: black;
+    padding: 50px;
+    margin: 50px;
+    text-align: center;
+    
+}
+
+.barre{
+    text-decoration: line-through;
+    opacity: 0.5;
+}
